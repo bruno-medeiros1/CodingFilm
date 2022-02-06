@@ -1,0 +1,107 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Registar";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4>Criar uma nova conta.</h4>
+<hr />
+
+<body>
+
+    <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Input.Username"></label>
+                    <input asp-for="Input.Username" class="form-control" />
+                    <span asp-validation-for="Input.Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="form-control" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.ConfirmPassword"></label>
+                    <input asp-for="Input.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Input.Nome"></label>
+                    <input asp-for="Input.Nome" type="text" placeholder="Nome" class="form-control" />
+                    <span asp-validation-for="Input.Nome" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Morada"></label>
+                    <input asp-for="Input.Morada" type="text" placeholder="*" class="form-control" />
+                    <span asp-validation-for="Input.Morada" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+
+                    <label asp-for="Input.Nif"></label>
+                    <input asp-for="Input.Nif" type="number" placeholder="*" class="form-control" />
+                    <span asp-validation-for="Input.Nif" class="text-danger"></span>
+
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Telefone"></label>
+                    <input asp-for="Input.Telefone" type="number" placeholder="+351" class="form-control" />
+                    <span asp-validation-for="Input.Telefone" class="text-danger"></span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Registar com conta local</button>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        </div>
+
+    </form>
+
+    <section>
+        @{
+            if ((Model.ExternalLogins?.Count ?? 0) == 0)
+            {
+                <div>
+                    <p>
+                        Não existem serviços de autenticação configurados. Veja <a href="https://go.microsoft.com/fwlink/?LinkID=532715">este artigo</a>
+                        para detalhes em como definir esta aplicação de ASP.NET para suportar logins por serviços externos.
+                    </p>
+                </div>
+            }
+            else
+            {
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                    <div>
+                        <p>
+                            @foreach (var provider in Model.ExternalLogins)
+                            {
+                                <button type="submit" class="btn btn-danger" name="provider" value="@provider.Name" title="Faça login com a conta @provider.DisplayName">Registar com conta @provider.DisplayName</button>
+                            }
+                        </p>
+                    </div>
+                </form>
+            }
+        }
+    </section>
+
+</body>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

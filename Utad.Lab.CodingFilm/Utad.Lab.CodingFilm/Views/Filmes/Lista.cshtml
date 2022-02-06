@@ -1,0 +1,148 @@
+﻿@using Utad.Lab.CodingFilm.Areas.Admin.Models
+@model IList<Categoria>
+
+@{
+    ViewData["Title"] = "A minha lista";
+
+    //  Casting
+    var categorias = (List<Categoria>)ViewData["Categorias"];
+    var categoriasPreferidas = (List<CategoriasFavoritas>)ViewData["CategoriasPreferidas"];
+}
+
+<style>
+    #table_€ {
+        font-size: 10px;
+    }
+    #table {
+        background: rgb(116,63,251);
+        background: linear-gradient(75deg, rgba(116,63,251,0.5914740896358543) 0%, rgba(158,70,252,1) 72%);
+        color: white;
+        border: 2px solid mediumpurple;
+    }
+</style>
+
+<body>
+    <h2> @ViewData["Title"] </h2>
+    <h5>Aqui poderás editar a tua lista de categorias preferidas e visualizar os filmes que já viste!</h5>
+    <hr />
+
+    <!-- Lista de categorias preferidas-->
+    <div class="row">
+
+        <h3><strong>Lista de Categorias Preferidas</strong></h3>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <span style="font-weight:bold">@TempData["Success"]</span>
+            </div>
+        }
+        @if (TempData["NoSuccess"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <span style="font-weight:bold">@TempData["NoSuccess"]</span>
+            </div>
+        }
+
+        <div class="col-md-4">
+            <hr style="height:2px;border:none;color:#333;background-color:#333;" />
+
+            <table class="table table-hover" style='border: 2px solid mediumpurple;'>
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" id="table">Categoria</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var categoria in @categoriasPreferidas)
+                    {
+                        <tr>
+                            <td style='border: 2px solid mediumpurple;'><span style="font-weight:bold; font-size: 11px;" class="glyphicon glyphicon-trash"></span> @categoria.Categoria.Nome</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <br /><br />
+        <div class="col-md-4">
+            @if (@categoriasPreferidas.Count == 0)
+            {
+
+
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 style="font-weight:bold">Nota</h3>
+                    Não possuis nenhuma categoria favorita, adiciona abaixo!
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 style="font-weight:bold">Nota</h3>
+                    Ao adicionares uma categoria à tua lista de favoritos irás receber uma notificação por email quando sair um novo filme pertencente a uma dessas categorias!
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <form method="post">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label> Adicionar categoria à lista </label>
+                    <select class="form-control" name="inputNome">
+
+                        @foreach (var categoria in @categorias)
+                        {
+                            <option value="@categoria.Nome"> @categoria.Nome </option>
+                        }
+
+                    </select>
+                </div>
+                <div class="form-group animate__animated animate__tada">
+                    <button class="btn btn-success">Adicionar categoria</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+        <!-- Lista de Filmes vistos-->
+        <div class="row">
+
+            <h3><strong>Lista de filmes vistos</strong></h3>
+            <hr style="height:2px;border:none;color:#333;background-color:#333;" />
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Filme</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Tipo de Bilhete</th>
+                        <th>Bilhetes comprados</th>
+                        <th>Preço</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Licorice Pizza</td>
+                        <td>27/01/2022</td>
+                        <td>22:00h</td>
+                        <td>Estudante</td>
+                        <td>2</td>
+                        <td>12,80 <span class="glyphicon glyphicon-euro" id="table_€"></span> </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="form-group">
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <span style="font-weight:bold; font-style:italic">Exemplo meramente demostrativo</span>
+                </div>
+            </div>
+        </div>
+</body>

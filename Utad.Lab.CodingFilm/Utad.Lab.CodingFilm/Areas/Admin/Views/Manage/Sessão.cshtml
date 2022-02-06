@@ -1,0 +1,196 @@
+﻿
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Utad.Lab.CodingFilm.Areas.Admin.ViewModels
+@using Utad.Lab.CodingFilm.Areas.Admin.Models
+
+@model SessãoViewModel
+@{
+    ViewData["Title"] = "Adicionar Sessões";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //  Casting
+    var sessões = (List<SessãoViewModel>)ViewData["Sessões"];
+    var salas = (List<Sala>)ViewData["Salas"];
+}
+
+<style>
+    .navbar-brand {
+        font-family: 'Roboto', sans-serif;
+        color: grey;
+        font-size: 30px;
+        margin: 0px;
+    }
+</style>
+
+<h2>Definições Administrador</h2>
+
+<div>
+    <h4>Aqui poderás configurar, adicionar e remover serviços do cinema.</h4>
+    @if (@User.IsInRole("Admin"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-success">Função: Administrador</span></h6>
+        </div>
+    }
+    @if (@User.IsInRole("Funcionário"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-warning">Função: Funcionário</span></h6>
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span style="font-weight:bold">A sessão foi adicionada com sucesso!</span>
+        </div>
+    }
+
+    <hr />
+
+    <!-- Sidebar Definições da Conta-->
+    <div class="col-md-2">
+        <nav id="sidebar">
+            <!-- Side  Menu -->
+            <ul class="nav nav-pills nav-stacked">
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Funcionário"))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Index">Adicionar Filmes</a>
+                    </li>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="active">
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Sessão">Adicionar Sessões</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Salas">Adicionar Salas</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Categorias">Adicionar Categorias</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Utilizadores">Criar Utilizadores</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Logs">Logs</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+
+    <form id="sessão-form" method="post">
+        <div class="row">
+            <div class="col-md-5">
+                <h3>Detalhes da Sessão</h3>
+                <h5>Aqui poderás definir todos os detalhes acerca da sessão!</h5><br />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="nome"></label>
+                    <input asp-for="nome" class="form-control" placeholder="Sessão x" />
+                    <span asp-validation-for="nome" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="data"></label>
+                    <input asp-for="data" type="date" class="form-control" />
+                    <span asp-validation-for="data" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="horário"></label>
+                    <input asp-for="horário" type="time" class="form-control" />
+                    <span asp-validation-for="horário" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Sala da Sessão</label>
+                    <select asp-for="nomeSala" class="form-control">
+
+                        @foreach (var sala in @salas)
+                        {
+                            <option value="@sala.Nome"> @sala.Nome</option>
+                        }
+
+                    </select>
+
+                    @if (@salas.Count == 0)
+                    {
+                        <br />
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            Adiciona
+                            <a asp-area="Admin" asp-controller="Manage" asp-action="Salas">
+                                <span style="font-weight:bold; color:darkred">salas</span>
+                            </a>
+                            primeiro para poderes adicionar uma sessão!
+                        </div>
+                    }
+                </div>
+
+
+                <div class="form-group">
+
+                    <input class="btn btn-success" type="submit" value="Adicionar Sessão" />
+                </div>
+            </div>
+            <div class="col-md-4">
+
+                <br /><br /><br /><br /><br />
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 style="font-weight:bold">Nota</h3> <br />
+                    Sessões que usem a mesma sala e estejam criadas para serem usadas no mesmo dia, deveram ter um intervalo de pelo menos
+                    <span style="font-weight:bold">4h</span>
+                    para poder haver tempo de acabar o filme, limpar a sala e voltar a usar esta mesma para outra sessão.<br />
+                </div>
+            </div>
+        </div>
+
+        <!-- Salas e Sessões -->
+        <div class="row">
+            <h3>Lista de Sessões</h3>
+            <h5>Aqui poderás visualizar que sessões ainda se encontram válidas!</h5><br />
+
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Sessões Disponíveis</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Horário</th>
+                        <th scope="col">Sala atribuída</th>
+                        <th scope="col">Filme atribuído</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Ciclo que mostre todas as sessões que existem na base de dados-->
+                    @foreach (var sessão in @sessões)
+                    {
+                        <tr>
+                            <td>@sessão.nome</td>
+                            <td>@sessão.data.ToString("dd/MM/yyyy")</td>
+                            <td>@sessão.horário.ToString(@"hh\:mm")</td>
+                            <td>@sessão.nomeSala</td>
+                            @if (sessão.nomeFilme == null)
+                            {
+                                <td>nenhum</td>
+                            }
+                            else
+                            {
+                                <td>@sessão.nomeFilme</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+

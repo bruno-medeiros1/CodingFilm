@@ -1,0 +1,263 @@
+﻿
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Utad.Lab.CodingFilm.Areas.Admin.ViewModels
+@using Utad.Lab.CodingFilm.Areas.Admin.Models
+
+@model FilmeViewModel
+@{
+    ViewData["Title"] = "Adicionar Filme";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //  Casting
+    var categorias = (List<Categoria>)ViewData["Categorias"];
+    var sessões = (List<Sessão>)ViewData["Sessões"];
+}
+
+<style>
+    .navbar-brand {
+        font-family: 'Roboto', sans-serif;
+        color: grey;
+        font-size: 30px;
+        margin: 0px;
+    }
+</style>
+
+<h2>Definições Administrador</h2>
+
+<div>
+    <h4>Aqui poderás configurar, adicionar e remover serviços do cinema.</h4>
+    @if (@User.IsInRole("Admin"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-success">Função: Administrador</span></h6>
+        </div>
+    }
+    @if (@User.IsInRole("Funcionário"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-warning">Função: Funcionário</span></h6>
+        </div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span style="font-weight:bold">O filme foi adicionado com sucesso!</span>
+        </div>
+    }
+    <hr />
+
+    <!-- Sidebar Definições da Conta-->
+    <div class="col-md-2">
+        <nav id="sidebar">
+            <!-- Side  Menu -->
+            <ul class="nav nav-pills nav-stacked">
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Funcionário"))
+                {
+                    <li class="active">
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Index">Adicionar Filmes</a>
+                    </li>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Sessão">Adicionar Sessões</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Salas">Adicionar Salas</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Categorias">Adicionar Categorias</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Utilizadores">Criar Utilizadores</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Logs">Logs</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+
+    <form id="filme-form" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-5">
+                <h3>Detalhes do filme</h3>
+                <h5>Aqui poderás definir todos os detalhes acerca do filme!</h5><br />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="nome"></label>
+                    <input asp-for="nome" class="form-control" />
+                    <span asp-validation-for="nome" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="realizador"></label>
+                    <input asp-for="realizador" class="form-control" />
+                    <span asp-validation-for="realizador" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="duração"></label>
+                    <input asp-for="duração" type="time" class="form-control" />
+                    <span asp-validation-for="duração" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="dataEstreia"></label>
+                    <input asp-for="dataEstreia" type="date" class="form-control" />
+                    <span asp-validation-for="dataEstreia" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-floating">
+                        <label asp-for="descrição"></label>
+                        <textarea asp-for="descrição" class="form-control" placeholder="Deixa uma descrição do filme aqui..." style="height: 100px"></textarea>
+                        <span asp-validation-for="descrição" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="pais"></label>
+                    <input asp-for="pais" type="text" class="form-control" />
+                    <span asp-validation-for="pais" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="trailerLink"></label><br />
+                    <span class="text-warning" style="font-size:x-small">Formato do link: https://youtube.com/embed/{ID_VIDEO} </span>
+                    <input asp-for="trailerLink" type="url" class="form-control" />
+                    <span asp-validation-for="trailerLink" class="text-danger"></span><br />
+                </div>
+
+
+                <!-- Escolha de uma Categoria para o Filme-->
+                <div class="form-group">
+                    <label asp-for="nomeCategoria"></label>
+                    <select asp-for="nomeCategoria" class="form-control">
+
+                        <!-- Ciclo que mostre todas as categorias que existem na base de dados-->
+                        @foreach (var categoria in @categorias)
+                        {
+                            <option value="@categoria.Nome"> @categoria.Nome </option>
+                        }
+
+                    </select>
+
+                    @if (@categorias.Count == 0)
+                    {
+                        <br />
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            Adiciona
+                            <a asp-area="Admin" asp-controller="Manage" asp-action="Categorias">
+                                <span style="font-weight:bold; color:darkred">categorias</span>
+                            </a>
+                            primeiro para poderes adicionar um filme!
+                        </div>
+                    }
+                </div>
+
+            </div>
+
+            <!-- Foto de Capa de Filme-->
+            <div class="col-md-4">
+                <div class="form-group">
+                    <br /><br /><br /><br /><br />
+
+                    <img id="FotoFilme" style="width:350px;height:350px; object-fit:cover; border-radius:30px" src="">
+
+                    <div class="row-md-5">
+                        <h6><span class="label label-pill label-danger">Atualizar Foto de capa do filme</span></h6>
+                        <label> Anexar foto de capa do filme (.png, .jpg, .jpeg).</label>
+                    </div>
+
+                    <input asp-for="foto" type="file" class="form-control" accept=".png,.jpg,.jpeg" onchange="document.getElementById('FotoFilme').src = window.URL.createObjectURL(this.files[0])" />
+                    <span asp-validation-for="foto" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <hr />
+
+        <!-- Salas e Sessões -->
+        <div class="row">
+            <h3>Atribuição do filme a sessões e salas.</h3>
+            <h5>Aqui poderás atribuir o filme recém criado a Sessões e respetivas salas!</h5><br />
+
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Sessões Disponíveis</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Horário</th>
+                        <th scope="col">Sala</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Ciclo que mostre todas as sessões que existem na base de dados que estão disponíveis-->
+                    @foreach (var sessão in @sessões)
+                    {
+                        <tr>
+                            <td>@sessão.Nome</td>
+                            <td>@sessão.Data.ToString("dd/MM/yyyy")</td>
+                            <td>@sessão.Horário.ToString(@"hh\:mm")</td>
+                            <td>@sessão.Sala.Nome</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+
+                <div class="form-group">
+                    <label asp-for="nomeSessão"></label>
+                    <select asp-for="nomeSessão" class="form-control">
+
+                        @foreach (var sessão in @sessões)
+                        {
+                            <option value="@sessão.Nome"> @sessão.Nome</option>
+                        }
+
+                    </select>
+
+                </div>
+            </div>
+        </div>
+
+        @if (sessões.Count == 0)
+        {
+            <br />
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                Adiciona
+                <a asp-area="Admin" asp-controller="Manage" asp-action="Sessão">
+                    <span style="font-weight:bold; color:darkred">sessões</span>
+                </a>
+                primeiro para poderes criar um filme!
+            </div>
+        }
+
+        <div class="row">
+
+            <div class="form-group">
+                <hr />
+                <h3>Criar novo filme</h3>
+
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    Certifica-te que todos os dados estão correctos antes de adicionares o filme!
+                </div>
+
+                <input class="btn btn-success" type="submit" value="Adicionar Filme" />
+
+            </div>
+        </div>
+    </form>
+</div>
+

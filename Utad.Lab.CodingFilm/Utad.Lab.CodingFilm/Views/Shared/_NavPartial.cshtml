@@ -1,0 +1,113 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Utilizador> SignInManager
+@inject UserManager<Utilizador> UserManager
+
+<style>
+    #css_LL {
+        font-size: 16px;
+        color: grey;
+    }
+
+    #css_N {
+        margin-left: -10px;
+        margin-top: -20px;
+    }
+
+    #css_welcomeMessage {
+        font-size: 12px;
+        font-weight: bold;
+        width: 8rem;
+        color: white;
+        margin-left: 8px;
+    }
+
+    #css_LL {
+        font-size: 16px;
+        color: grey;
+    }
+
+    .navbar-brand {
+        font-family: 'Roboto', sans-serif;
+        color: grey;
+        font-size: 30px;
+        margin: 0px;
+    }
+</style>
+
+<!--  Navegador -->
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+
+            <!-- GIF e Nome do Projeto-->
+            <img class="navbar-left" src="~/Images/Logo_Cinema.gif" width="50" height="50" />
+            <h2 class="navbar-brand" style="font-family: Roboto-Black">CodingFilm</h2>
+        </div>
+
+        <ul class="nav navbar-nav">
+            <!-- Página Home-->
+            <li>
+                <a asp-area="" asp-controller="Home" asp-action="Index">Página Inicial</a>
+            </li>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <li>
+                    <a asp-area="" asp-controller="Filmes" asp-action="Lista">A minha lista</a>
+                </li>
+            }
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+
+            @if (SignInManager.IsSignedIn(User))
+            {
+                @if (UserManager.GetUserAsync(User).Result.FotoPerfil != null)
+                {
+                    <li class="nav-item" style="align-self: center;">
+                        <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.FotoPerfil))">
+                    </li>
+                }
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" title="Manage">Bem-vindo/a @User.Identity.Name!</a>
+                </li>
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Funcionário"))
+                {
+                    <!-- ADMIN -->
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="Admin" asp-controller="Manage" asp-action="Index" title="Manage"><span class="glyphicon glyphicon-user" id="css_LL"> Admin</span></a>
+                    </li>
+                }
+
+
+                <!-- CONTA -->
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><span class="glyphicon glyphicon-user" id="css_LL"> Conta</span></a>
+                </li>
+
+                <!-- LOGOUT-->
+                <li>
+                    <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"><span class="glyphicon glyphicon-log-out" id="css_LL"> Sair</span></a>
+                </li>
+            }
+            else
+            {
+                <!-- Registar-->
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register"><span class="glyphicon glyphicon-pushpin" id="css_LL"> Registar</span></a>
+                </li>
+
+                <!-- Login-->
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login"><span class="glyphicon glyphicon-log-in" id="css_LL"> Login</span></a>
+                </li>
+            }
+        </ul>
+    </div>
+</nav>
+
+
+
+

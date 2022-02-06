@@ -1,0 +1,262 @@
+﻿
+@using Utad.Lab.CodingFilm.Areas.Admin.ViewModels
+@using Utad.Lab.CodingFilm.Areas.Admin.Models
+@model Utad.Lab.CodingFilm.Areas.Admin.Models.Filme
+
+@{
+    ViewData["Title"] = "Comprar Bilhetes";
+    var sessões = (List<SessãoViewModel>)ViewData["Sessões"];
+
+}
+
+<style>
+    #table_€ {
+        font-size: 10px;
+    }
+</style>
+
+
+<h2>Detalhes do Filme</h2>
+<h5>Aqui poderás ver todos os detalhes acerca do filme e comprar bilhetes!</h5>
+
+<div>
+    @if (@User.IsInRole("Admin"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-success">Função: Administrador</span></h6>
+        </div>
+    }
+    @if (@User.IsInRole("Funcionário"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-warning">Função: Funcionário</span></h6>
+        </div>
+    }
+    <hr />
+
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <!-- Foto de Capa de Filme-->
+            <div class="col-md-4">
+                <div class="form-group animate__animated animate__fadeIn" >
+                    <img class="card-img-top" style="width:250px;height:350px; object-fit:cover;" src="data:image/*;base64,@(Convert.ToBase64String(Model.Foto))" alt="Card image cap">
+            </div>
+
+
+                <div class="form-group" >
+
+                    <!-- Popup(Modal) para ver trailer-->
+                    <a style="color:mediumpurple" data-toggle="modal" data-target="#myModal">Ver trailer <span class="glyphicon glyphicon-film"></span></a>
+
+                    <div id="myModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h2 style="font-weight:bold">@Model.Nome</h2>
+                                    <iframe id="video" src="@Model.trailerLink" width="560" height="320" frameborder="0" allowfullscreen></iframe>
+                                </div>
+                                <div class="modal-footer" style="background-color:mediumpurple">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div col-md-3>
+                <h3>Filme</h3>
+                <h1><strong>@Model.Nome</strong></h1>
+
+                <div class="form-group">
+
+                    <div class="animate__animated animate__rubberBand">
+                        <!-- Popup(Modal) para ver trailer-->
+                        <button class="btn btn-success" data-toggle="modal" data-target="#myModal2">Comprar Bilhetes </button>
+                    </div>
+
+                    <div id="myModal2" class="modal fade" role="dialog">
+                        <div class="modal-dialog ">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3 style="font-family: Roboto-Black">Comprar bilhetes</h3>
+                                    <hr style="height:2px;border:none;color:#333;background-color:#333;" />
+
+                                    <h5 style="font-weight:bold">Indique a Sessão Pretendida</h5><br />
+
+
+                                    <!-- Sessões -->
+                                    <table class="table table-hover">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th scope="col">Sessão</th>
+                                                <th scope="col">Sala</th>
+                                                <th scope="col">Bilhetes Disponíveis</th>
+                                                <th scope="col">Data</th>
+                                                <th scope="col">Horário</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var sessão in @sessões)
+                                            {
+                                                <tr>
+                                                    <td>@sessão.nome</td>
+                                                    <td>@sessão.nomeSala</td>
+                                                    <td><center>@sessão.lugaresDisponiveis</center></td>
+                                                    <td>@sessão.data.ToString("dd/MM/yyyy")</td>
+                                                    <td>@sessão.horário.ToString(@"hh\:mm")</td>
+                                                    <td>
+                                                        <input class="checkbox" type="checkbox" value="" />
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <hr />
+
+                                    <h5 style="font-weight:bold">Indique os bilhetes pretendidos</h5><br />
+
+                                    <!--Bilhetes-->
+                                    <table class="table table-hover">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th scope="col">Tipo de Bilhete</th>
+                                                <th scope="col">Preço Unitário</th>
+                                                <th scope="col" >Quantidade</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Bilhete Normal-->
+                                            <tr>
+                                                <td>Bilhete Normal</td>
+                                                <td>7,10 <span class="glyphicon glyphicon-euro" id="table_€"></span> </td>
+                                                <td>
+                                                    <select class="form-control" style="width: 50%;">
+                                                        <option value="1">+1</option>
+                                                        <option value="2">+2</option>
+                                                        <option value="3">+3</option>
+                                                        <option value="4">+4</option>
+                                                        <option value="5">+5</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <!-- Bilhete Estudante-->
+                                            <tr>
+                                                <td>Estudante</td>
+                                                <td>6,40 <span class="glyphicon glyphicon-euro" id="table_€"></span> </td>
+                                                <td>
+                                                    <select class="form-control" style="width: 50%;">
+                                                        <option value="1">+1</option>
+                                                        <option value="2">+2</option>
+                                                        <option value="3">+3</option>
+                                                        <option value="4">+4</option>
+                                                        <option value="5">+5</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <!-- Bilhete Senior-->
+                                            <tr>
+                                                <td>Senior </td>
+                                                <td>6,40 <span class="glyphicon glyphicon-euro" id="table_€"></span> </td>
+                                                <td>
+                                                    <select class="form-control" style="width: 50%;">
+                                                        <option value="1">+1</option>
+                                                        <option value="2">+2</option>
+                                                        <option value="3">+3</option>
+                                                        <option value="4">+4</option>
+                                                        <option value="5">+5</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <hr />
+
+                                    <button class="btn btn-success">Confirmar compra </button>
+
+                                </div>
+
+                                <div class="modal-footer" style="background-color:lightgreen">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <h5>
+                <strong> Título:</strong> @Model.Nome
+            </h5>
+            <h5>
+                <strong> Realizador:</strong> @Model.Realizador
+            </h5>
+            <h5>
+                <strong> País:</strong> @Model.pais
+            </h5>
+            <h5>
+                <strong> Data de estreia:</strong> @Model.dataEstreia?.ToString("dd/MM/yyyy")
+            </h5>
+            <h5>
+                <strong> Duração:</strong>@Model.Duração.Value.Hours horas e @Model.Duração.Value.Minutes minutos
+            </h5>
+            <h5>
+                <strong> Categoria:</strong> @Model.Categoria.Nome
+            </h5>
+            <br />
+            <h5>
+                <strong> Descrição:</strong> @Model.Descrição
+            </h5>
+            <hr />
+        </div>
+    </div>
+
+
+    <!-- Salas e Sessões -->
+    <div class="row">
+        <h3><strong>Horário</strong></h3>
+        <hr style="height:2px;border:none;color:#333;background-color:#333;" />
+
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Sessões Disponíveis</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Horário</th>
+                    <th scope="col">Sala</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <!-- Ciclo que mostre todas as sessões que existem na base de dados que estão disponíveis-->
+                @foreach (var sessão in @sessões)
+                {
+                    <tr>
+                        <td>@sessão.nome</td>
+                        <td>@sessão.data.ToString("dd/MM/yyyy")</td>
+                        <td>@sessão.horário.ToString(@"hh\:mm")</td>
+                        <td>@sessão.nomeSala</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <hr style="height:2px;border:none;color:#333;background-color:#333;" />
+    </div>
+
+</div>
+
+
+
+

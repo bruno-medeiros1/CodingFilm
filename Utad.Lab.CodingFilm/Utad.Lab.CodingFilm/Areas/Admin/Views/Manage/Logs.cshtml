@@ -1,0 +1,324 @@
+﻿
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Utad.Lab.CodingFilm.Areas.Admin.Models
+
+@{
+    ViewData["Title"] = "Logs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //  Casting
+    var logs_categorias = (IList<Categorias_Utilizador>)ViewData["Logs_Categorias"];
+    var logs_filmes = (IList<Filmes_Utilizador>)ViewData["Logs_Filmes"];
+    var logs_utilizadores = (IList<Cria_Utilizadores>)ViewData["Logs_Utilizadores"];
+    var logs_salas = (IList<Salas_Utilizador>)ViewData["Logs_Salas"];
+    var logs_sessões = (IList<Sessões_Utilizador>)ViewData["Logs_Sessões"];
+}
+
+<style>
+    .navbar-brand {
+        font-family: 'Roboto', sans-serif;
+        color: grey;
+        font-size: 30px;
+        margin: 0px;
+    }
+</style>
+
+<h2>Definições Administrador</h2>
+
+<div>
+    <h4>Aqui poderás configurar, adicionar e remover serviços do cinema.</h4>
+    @if (@User.IsInRole("Admin"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-success">Função: Administrador</span></h6>
+        </div>
+    }
+    @if (@User.IsInRole("Funcionário"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-warning">Função: Funcionário</span></h6>
+        </div>
+    }
+    <hr />
+
+    <!-- Sidebar Definições da Conta-->
+    <div class="col-md-2">
+        <nav id="sidebar">
+            <!-- Side  Menu -->
+            <ul class="nav nav-pills nav-stacked">
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Funcionário"))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Index">Adicionar Filmes</a>
+                    </li>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Sessão">Adicionar Sessões</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Salas">Adicionar Salas</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Categorias">Adicionar Categorias</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Utilizadores">Criar Utilizadores</a>
+                    </li>
+                    <li class="active">
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Logs">Logs</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="form-group">
+                <h2 style="text-align:center">Sistema de Logs</h2>
+            </div>
+
+            <div class="form-group" style="margin-left: 30px;">
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <h5>Aqui poderás visualizar toda a atividade que ocorre a nível administrativo sobre o cinema, como por exemplo: </h5>
+                    <span style="font-style:italic">
+                        - Quem adicionou x filme, categoria, sessão ou sala; <br />
+                        - Quando é que foi adicionado; <br />
+                        - E por fim, quantos registos foi feito por um dado utilizador; <br />
+                        <br />
+                    </span>
+                    <hr />
+                    <h3 style="font-weight:bold">Nota</h3>
+                    Quando é eliminado um filme o respetivo log desse filme é eliminado também!
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <br /> <br />
+
+        <hr />
+
+        <div class="row">
+            <h3>Histórico de Atribuição de Filmes.</h3>
+            <h5>Aqui poderás ver todos os logs de atividade sobre os filmes do cinema!</h5><br />
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Adicionado por</th>
+                        <th scope="col">Nome do filme</th>
+                        <th scope="col">Data de estreia</th>
+                        <th scope="col">Descrição do filme</th>
+                        <th scope="col">Data do registo</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Ciclo que mostre todas as sessões que existem na base de dados que estão disponíveis-->
+                    @foreach (var log in @logs_filmes)
+                    {
+                        <tr>
+                            <td>@log.Filme.Id</td>
+                            <td>
+                                @if (log.Utilizador.FotoPerfil != null)
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(log.Utilizador.FotoPerfil))">
+                                }
+                                else
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="">
+                                }
+                                @log.Utilizador.UserName
+                            </td>
+                            <td>@log.Filme.Nome</td>
+                            <td>@log.Filme.dataEstreia?.ToString("dd/MM/yyyy")</td>
+                            <td>@log.Filme.Descrição</td>
+                            <td>@log.Data</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <hr />
+
+        <!-- Logs Categorias -->
+        <div class="row">
+            <h3>Histórico de Atribuição de Categorias.</h3>
+            <h5>Aqui poderás ver todos os logs de atividade sobre as categorias do cinema!</h5><br />
+
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Adicionado por</th>
+                        <th scope="col">Nome da Categoria</th>
+                        <th scope="col">Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var log in @logs_categorias)
+                    {
+                        <tr>
+                            <td>@log.Categoria.Id</td>
+                            <td>
+                                @if (log.Utilizador.FotoPerfil != null)
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(log.Utilizador.FotoPerfil))">
+                                }
+                                else
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="">
+                                }
+                                @log.Utilizador.UserName
+                            </td>
+                            <td>@log.Categoria.Nome</td>
+                            <td>@log.Data</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- Logs Salas -->
+        <div class="row">
+            <h3>Histórico de Atribuição de Salas.</h3>
+            <h5>Aqui poderás ver todos os logs de atividade sobre as salas do cinema!</h5><br />
+
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Adicionado por</th>
+                        <th scope="col">Nome da Sala</th>
+                        <th scope="col">Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var log in logs_salas)
+                    {
+                        <tr>
+                            <td>@log.Sala.Id</td>
+                            <td>
+                                @if (log.Utilizador.FotoPerfil != null)
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(log.Utilizador.FotoPerfil))">
+                                }
+                                else
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="">
+                                }
+                                @log.Utilizador.UserName
+                            </td>
+                            <td>@log.Sala.Nome</td>
+                            <td>@log.Data</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <!-- Logs Sessões -->
+        <div class="row">
+            <h3>Histórico de Atribuição de Sessões.</h3>
+            <h5>Aqui poderás ver todos os logs de atividade sobre as sessões do cinema!</h5><br />
+
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Adicionado por</th>
+                        <th scope="col">Nome da Sessão</th>
+                        <th scope="col">Horário da Sessão</th>
+                        <th scope="col">Data do registo</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var log in @logs_sessões)
+                    {
+                        <tr>
+                            <td>@log.Sessão.Id</td>
+                            <td>
+                                @if (log.Utilizador.FotoPerfil != null)
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(log.Utilizador.FotoPerfil))">
+                                }
+                                else
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="">
+                                }
+                                @log.Utilizador.UserName
+                            </td>
+                            <td>@log.Sessão.Nome</td>
+                            <td>@log.Sessão.Horário</td>
+                            <td>@log.Data</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Logs Utilizadores -->
+        <div class="row">
+            <h3>Histórico de Atribuição de Utilizadores.</h3>
+            <h5>Aqui poderás ver todos os logs de atividade sobre os utilizadores adicionados do cinema!</h5><br />
+
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Adicionado por</th>
+                        <th scope="col">Utilizador adicionado</th>
+                        <th scope="col">Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--    Por convenção considera-se que o Utilizador1 Cria o Utilizador2     -->
+                    @foreach (var log in logs_utilizadores)
+                    {
+                        <tr>
+                            <td>@log.Id</td>
+                            <td>
+                                @if (log.Utilizador1.FotoPerfil != null)
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(log.Utilizador1.FotoPerfil))">
+                                }
+                                else
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="/Images/UserProfilePic_Default.png">
+                                }
+                                @log.Utilizador1.UserName
+                            </td>
+                            <td>
+                                @if (log.Utilizador2.FotoPerfil != null)
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(log.Utilizador2.FotoPerfil))">
+                                }
+                                else
+                                {
+                                    <img style="width:35px;height:35px; object-fit:cover; border-radius:30px" src="/Images/UserProfilePic_Default.png">
+                                }
+                                @log.Utilizador2.UserName
+                            </td>
+                            <td>@log.Data</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+
+

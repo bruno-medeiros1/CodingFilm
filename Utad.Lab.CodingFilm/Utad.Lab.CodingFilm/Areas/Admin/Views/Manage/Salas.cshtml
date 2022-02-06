@@ -1,0 +1,157 @@
+﻿
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Utad.Lab.CodingFilm.Areas.Admin.Models
+
+@model Sala
+@{
+    ViewData["Title"] = "Adicionar Salas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //  Casting
+    var salas = (List<Sala>)ViewData["Salas"];
+}
+
+<style>
+    .navbar-brand {
+        font-family: 'Roboto', sans-serif;
+        color: grey;
+        font-size: 30px;
+        margin: 0px;
+    }
+</style>
+
+<h2>Definições Administrador</h2>
+
+<div>
+    <h4>Aqui poderás configurar, adicionar e remover serviços do cinema.</h4>
+    @if (@User.IsInRole("Admin"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-success">Função: Administrador</span></h6>
+        </div>
+    }
+    @if (@User.IsInRole("Funcionário"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-warning">Função: Funcionário</span></h6>
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span style="font-weight:bold">A sala foi adicionada com sucesso!</span>
+        </div>
+    }
+    <hr />
+
+    <!-- Sidebar Definições da Conta-->
+    <div class="col-md-2">
+        <nav id="sidebar">
+            <!-- Side  Menu -->
+            <ul class="nav nav-pills nav-stacked">
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Funcionário"))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Index">Adicionar Filmes</a>
+                    </li>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Sessão">Adicionar Sessões</a>
+                    </li>
+                    <li class="active">
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Salas">Adicionar Salas</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Categorias">Adicionar Categorias</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Utilizadores">Criar Utilizadores</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Logs">Logs</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+
+    <form id="sala-form" method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Detalhes da Sala</h3>
+                <h5>Aqui poderás definir todos os detalhes acerca da sala!</h5><br />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="Nome"></label>
+                    <input asp-for="Nome" class="form-control" placeholder="Sala x" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Capacidade"></label>
+                    <input asp-for="Capacidade" type="number" class="form-control" />
+                    <span asp-validation-for="Capacidade" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="lugaresDisponiveis"></label>
+                    <input asp-for="lugaresDisponiveis" type="number" class="form-control" />
+                    <span asp-validation-for="lugaresDisponiveis" class="text-danger"></span>
+                </div>
+
+
+                <div class="form-group">
+                    <input class="btn btn-success" type="submit" value="Adicionar Sala" />
+                </div>
+            </div>
+
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+
+                <br /><br /><br /><br /><br />
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 style="font-weight:bold">Nota</h3> <br />
+                    Cada sala só pode ter uma capacidade entre os <span style="font-weight:bold">50 </span> a <span style="font-weight:bold"> 150</span> lugares!
+                </div>
+            </div>
+        </div>
+
+            <!-- Salas e Sessões -->
+            <div class="row">
+                <h3>Lista de salas criadas.</h3>
+                <h5>Aqui poderás visualizar que salas foram criadas e os seus detalhes!</h5><br />
+
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Nome da Sala</th>
+                            <th scope="col">Capacidade da Sala</th>
+                            <th scope="col">Lugares disponíveis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Ciclo que mostre todas as sessões que existem na base de dados-->
+                        @foreach (var sala in @salas)
+                        {
+                            <tr>
+                                <td>@sala.Nome</td>
+                                <td>@sala.Capacidade</td>
+                                <td>@sala.lugaresDisponiveis</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+</form>
+</div>
+
+

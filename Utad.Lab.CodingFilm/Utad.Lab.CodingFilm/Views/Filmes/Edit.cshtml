@@ -1,0 +1,229 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+
+@using Utad.Lab.CodingFilm.Areas.Admin.ViewModels
+@using Utad.Lab.CodingFilm.Areas.Admin.Models
+
+@model FilmeViewModel
+@{
+    ViewData["Title"] = "Editar Filme";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //  Casting
+    var categorias = (List<Categoria>)ViewData["Categorias"];
+    var sessões = (List<Sessão>)ViewData["Sessões"];
+    var sessõesdisponiveis = (List<Sessão>)ViewData["SessõesDisponiveis"];
+}
+
+<style>
+    .navbar-brand {
+        font-family: 'Roboto', sans-serif;
+        color: grey;
+        font-size: 30px;
+        margin: 0px;
+    }
+</style>
+
+<body>
+
+    <h2 style="font-family: Roboto-Black;">Editar filme</h2>
+    <h5>Aqui poderás editar todos os detalhes acerca do filme!</h5>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span style="font-weight:bold">As alterações foram guardadas com sucesso!</span>
+        </div>
+    }
+    <hr />
+
+    <!-- Formulário -->
+    <form asp-controller="Filmes" asp-action="Save" method="post" enctype="multipart/form-data">
+
+        <div class="row">
+            <!-- Foto de Capa de Filme  -->
+            <div class="col-md-5 animate__animated animate__fadeIn">
+                <div class="form-group">
+                    <img id="FotoFilme" style="width:350px;height:450px; object-fit:cover;" src="data:image/*;base64,@(Convert.ToBase64String(@Model.foto))">
+                </div>
+            </div>
+
+            <!-- Dados do Filme -->
+            <div class="col-md-7">
+
+                <div class="form-group" hidden>
+                    <input asp-for="FilmeId" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="nome"></label>
+                    <input asp-for="nome" class="form-control" />
+                    <span asp-validation-for="nome" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="realizador"></label>
+                    <input asp-for="realizador" class="form-control" />
+                    <span asp-validation-for="realizador" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="duração"></label>
+                    <input asp-for="duração" type="time" class="form-control" />
+                    <span asp-validation-for="duração" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="dataEstreia"></label>
+                    <input asp-for="dataEstreia" type="date" class="form-control" />
+                    <span asp-validation-for="dataEstreia" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="pais"></label>
+                    <input asp-for="pais" type="text" class="form-control" />
+                    <span asp-validation-for="pais" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="trailerLink"></label>
+                    <input asp-for="trailerLink" type="url" class="form-control" />
+                    <span asp-validation-for="trailerLink" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-floating">
+                        <label asp-for="descrição"></label>
+                        <textarea asp-for="descrição" class="form-control" placeholder="Deixa uma descrição do filme aqui..." style="height: 100px"></textarea>
+                        <span asp-validation-for="descrição" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Escolha de uma Categoria para o Filme  -->
+                <div class="form-group">
+                    <label asp-for="nomeCategoria"></label>
+                    <select asp-for="nomeCategoria" class="form-control">
+
+                        <!-- Ciclo que mostre todas as categorias que existem na base de dados-->
+                        @foreach (var categoria in @categorias)
+                        {
+                            <option value="@categoria.Nome"> @categoria.Nome </option>
+                        }
+
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Salas e Sessões -->
+        <div class="row">
+
+            <h3><strong>Horário</strong></h3>
+            <hr style="height:2px;border:none;color:#333;background-color:#333;" />
+
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Sessões Disponíveis</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Horário</th>
+                        <th scope="col">Sala</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!--    Ciclo que mostre todas as sessões que existem na base de dados que estão disponíveis   -->
+                    @foreach (var sessão in @sessões)
+                    {
+                        <tr>
+                            <td>@sessão.Nome</td>
+                            <td>@sessão.Data.ToString("dd/MM/yyyy")</td>
+                            <td>@sessão.Horário.ToString(@"hh\:mm")</td>
+                            <td>@sessão.Sala.Nome</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Escolha da Sessão -->
+        @if (sessõesdisponiveis.Count == 0)
+        {
+            <div class="row">
+                <div class="col-md-9">
+
+                    <div class="form-group">
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            Não existem mais sessões disponíveis. Adiciona novas
+                            <a asp-area="Admin" asp-controller="Manage" asp-action="Sessão">
+                                <span style="font-weight:bold; color:darkred">sessões</span>
+                            </a>
+                            para poderes adiciona-las a este filme!
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-3">
+
+                    <div class="form-group">
+                        <label>Adicionar Sessão ao filme</label>
+                        <select asp-for="nomeSessão" class="form-control">
+
+                            @foreach (var sessão in @sessõesdisponiveis)
+                            {
+                                <option value="@sessão.Nome"> @sessão.Nome</option>
+                            }
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        }
+        <hr />
+
+        <div class="row">
+            <div class="col-md-7">
+
+                <!-- Guardar alterações Filme -->
+                <div class="form-group">
+                    <h3 style="font-family: Roboto-Black;">Salvar definições do filme</h3>
+                    <h5>Certifica-te que todos os dados estão correctos antes de clicares em guardar alterações!</h5><br />
+
+                    <input class="btn btn-success" type="submit" value="Guardar alterações" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <a asp-area="" asp-controller="Home" asp-action="Index">Retornar Página Inicial</a>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <!-- Remover Filme -->
+            <div class="col-md-5">
+                <div class="form-group">
+                    <h3 style="font-family: Roboto-Black;">Apagar filme</h3>
+                    <h5>Uma vez apagado o filme não poderá ser recuperado...</h5><br />
+                    <a asp-area="" asp-controller="Filmes" asp-action="Delete" asp-route-id="@Model.FilmeId">
+                        <input class="btn btn-danger" type="button" value="Remover Filme" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

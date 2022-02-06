@@ -1,0 +1,89 @@
+﻿@using Utad.Lab.CodingFilm.Areas.Admin.ViewModels
+@using Utad.Lab.CodingFilm.Areas.Admin.Models
+
+@model IList<Filme>
+@{
+    //  Casting
+    var filmes = (List<Filme>)ViewData["Filmes"];
+}
+
+
+<style>
+    #card {
+        border-style: solid;
+        border-width: 5px;
+        border-color: black;
+        height: 20rem;
+        background: rgb(116,63,251);
+        background: linear-gradient(75deg, rgba(116,63,251,0.5914740896358543) 0%, rgba(158,70,252,1) 72%); /*https://cssgradient.io/*/
+    }
+    .card:hover {
+        box-shadow: 4px 4px 4px rgba(116,63,251,0.5914740896358543);
+        transform: scale(1.1);
+    }
+
+    #edit_button {
+        width: 100px;
+        height: 30px;
+        font-weight: bold;
+        background-color: rebeccapurple;
+        color: white;
+    }
+
+</style>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span style="font-weight:bold">@TempData["Success"]</span>
+    </div>
+}
+@if (TempData["NoSuccess"] != null)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span style="font-weight:bold">@TempData["NoSuccess"]</span>
+    </div>
+}
+
+<!-- Zona dos Filmes -->
+<div class="animate__animated animate__fadeIn">
+    <div class="container py-3 ">
+        <div class="album py-3 bg-light">
+            <div class="container">
+
+                <div class="row">
+
+                    @foreach (var filme in Model.ToList())
+                    {
+                        <div class="col-md-3">
+                            <div class="filme card mb-3 " id="card">
+
+                                <!-- Referência para outra action-->
+                                <a asp-area="" asp-controller="Filmes" asp-action="Pages" asp-route-id="@filme.Id">
+
+                                    <img class="card-img-top" src="data:image/*;base64,@(Convert.ToBase64String(filme.Foto))" alt="Card image top" style="object-fit: cover; height: 75%; width: 100%; padding: 0%;">
+                                </a>
+
+                                <div class="card-body">
+                                    <h5 class="card-title" style="font-family: Roboto-Black; color: white; text-align:center">@filme.Nome</h5>
+                                    <h6 class="card-subtitle text-center">
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a asp-controller="Filmes" asp-action="Edit" asp-route-id="@filme.Id" method="get">
+                                                <input type="button" class="btn" id="edit_button" value="Editar Filme" />
+                                            </a>
+                                        }
+                                    </h6>
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

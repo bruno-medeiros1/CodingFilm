@@ -1,0 +1,73 @@
+﻿@model Utad.Lab.CodingFilm.Areas.Admin.Models.Filme
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2 style="font-family: Roboto-Black;">Apagar Filme</h2>
+<h5 >Aqui poderás apagar o registo de um filme.</h5>
+<hr />
+
+<div class="row">
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <img id="FotoFilme" style="width:350px;height:450px; object-fit:cover;" src="data:image/*;base64,@(Convert.ToBase64String(@Model.Foto))">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nome"></label>
+                <input asp-for="Nome" class="form-control" disabled />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Realizador"></label>
+                <input asp-for="Realizador" class="form-control" disabled />
+                <span asp-validation-for="Realizador" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="pais"></label>
+                <input asp-for="pais" class="form-control" disabled />
+                <span asp-validation-for="pais" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="trailerLink"></label>
+                <input asp-for="trailerLink" class="form-control" disabled />
+                <span asp-validation-for="trailerLink" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="dataEstreia"></label>
+                <input asp-for="dataEstreia" type="date" class="form-control" disabled />
+                <span asp-validation-for="dataEstreia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Duração"></label>
+                <input asp-for="Duração" type="time" class="form-control" disabled />
+                <span asp-validation-for="Duração" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="form-floating">
+                    <label asp-for="Descrição"></label>
+                    <textarea asp-for="Descrição" class="form-control" placeholder="Deixa uma descrição do filme aqui..." style="height: 100px" disabled></textarea>
+                    <span asp-validation-for="Descrição" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Categoria</label>
+                <input asp-for="Categoria.Nome" type="text" class="form-control" disabled />
+            </div>
+            <div class="animate__animated animate__rubberBand">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="submit" value="Apagar definitivamente" class="btn btn-danger" /><br />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

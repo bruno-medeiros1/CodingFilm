@@ -1,0 +1,128 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Perfil";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+
+}
+
+<style>
+    .navbar-brand {
+        font-family: 'Roboto', sans-serif;
+        color: grey;
+        font-size: 30px;
+        margin: 0px;
+    }
+
+    img {
+        border-radius: 50%;
+    }
+</style>
+
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+@if (TempData["canChangeUsername"] != null)
+{
+
+}
+else
+{
+    <partial name="_StatusMessage" model="Model.UserNameChangeStatus" />
+}
+
+<form id="profile-form" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Input.Username"></label>
+                @if (TempData["canChangeUsername"] != null)
+                {
+                    <input asp-for="Input.Username" class="form-control" disabled />
+                }
+                else
+                {
+                    <input asp-for="Input.Username" class="form-control" />
+                }
+                <span asp-validation-for="Input.Username" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" disabled />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.PhoneNumber"></label>
+                <input asp-for="Input.PhoneNumber" type="number" class="form-control" />
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Nome"></label>
+                <input asp-for="Input.Nome" class="form-control" />
+                <span asp-validation-for="Input.Nome" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Nif"></label>
+                <input asp-for="Input.Nif" type="number" class="form-control" />
+                <span asp-validation-for="Input.Nif" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Morada"></label>
+                <input asp-for="Input.Morada" class="form-control" />
+                <span asp-validation-for="Input.Morada" class="text-danger"></span>
+            </div>
+
+
+            <button id="update-profile-button" type="submit" class="btn btn-primary">Guardar Alterações</button>
+
+            <!-- Home-->
+            <div class="card-footer">
+                <a asp-area="" asp-controller="Home" asp-action="Index">Retornar Página Inicial</a>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+
+                @if (Model.Input.FotoPerfil != null)
+                {
+                    <!-- Imagem de perfil-->
+                    <div class="animate__animated animate__fadeInDown animate__slow">
+                        <img id="fotoperfil" alt="Avatar" style="width:300px; height:300px" src="data:image/*;base64,@(Convert.ToBase64String(Model.Input.FotoPerfil))">
+                    </div>
+
+                }
+                else
+                {
+                    <img id="fotoperfil" style="width:400px;height:400px; object-fit:cover; border-radius:30px" src="/Images/UserProfilePic_Default.png">
+
+                }
+                <div class="row-md-5 ">
+                    <h6><span class="label label-pill label-danger">Atualizar Foto de Perfil</span></h6>
+                    <label> Anexar foto de perfil (.jpg, .jpeg, .gif, .tif).</label>
+                </div>
+                <input type="file"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="Input.FotoPerfil"
+                       class="form-control"
+                       style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
+                       onchange="document.getElementById('fotoperfil').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="Input.FotoPerfil" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

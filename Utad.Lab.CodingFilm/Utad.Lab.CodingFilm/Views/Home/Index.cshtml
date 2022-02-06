@@ -1,0 +1,171 @@
+﻿@using Utad.Lab.CodingFilm.Areas.Admin.ViewModels
+@using Utad.Lab.CodingFilm.Areas.Admin.Models
+
+@model Filme
+@{
+    ViewData["Title"] = "Página Inicial";
+
+    //  Casting
+    var filmes = (List<Filme>)ViewData["Filmes"];
+    var categorias = (List<Categoria>)ViewData["Categorias"];
+}
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Home</title>
+
+    <style>
+        /* Css para as imagens das capas do filme caberem dentro do card*/
+        .card-img-top {
+            width: 100%;
+            height: 25vw;
+            object-fit: cover;
+        }
+
+        /*  Css para mudar a cor do fundo das cards*/
+        .card {
+            background-color: black;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div>
+
+        <!--    Apresentação de imagens com Carousel   -->
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner ">
+
+                <div class="item active">
+                    <!-- As imagens são 1920x1080-->
+                    <img src="/Images/filme_1.jpg" alt="Chania">
+                    <div class="carousel-caption">
+                        <h3>The Avengers</h3>
+                        <p>Prepara-te para a ação!</p>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <img src="/Images/filme_2.jpg" alt="Chicago">
+                    <div class="carousel-caption">
+                        <h3>Interstellar</h3>
+                        <p>O melhor filme do mundo!</p>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <img src="/Images/filme_3.jpg" alt="New York">
+                    <div class="carousel-caption">
+                        <h3>Harry Potter o Reencontro</h3>
+                        <p>A saga está de volta aos cinemas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">Anterior</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">Próximo</span>
+            </a>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <div class="animate__animated animate__fadeInDown animate__slow">
+
+            <!-- Mensagem Introdutória-->
+            <div class="jumbotron">
+                <h1 class="display-3" style="font-family: Roboto-Black">Olá, usuário</h1>
+                <p class="lead">Bem-vindo ao nosso site <span style="font-weight:bold">CodingFilm</span>!</p>
+                <hr class="my-3">
+                <p>Abaixo poderás encontrar uma lista dos últimos filmes da atualidade e comprar bilhetes!</p>
+            </div>
+        </div>
+
+
+        <!-- Navbar de Pesquisa-->
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" asp-controller="Filmes" asp-action="Cartaz" style="font-family: Roboto-Light"
+                        data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#filmes">Cartaz</a>
+                </div>
+                <ul class="nav navbar-nav">
+
+                    <!--Pesquisa por categoria-->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Categoria
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            @foreach (var categoria in @categorias)
+                            {
+                                <!-- Uso do AJAX para atualizar o div com os filmes corretos-->
+                                <li>
+                                    <a asp-controller="Filmes" asp-action="ProcurarCategoria" asp-route-nomeCategoria="@categoria.Nome"
+                                       data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#filmes">@categoria.Nome</a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+
+                    <!-- Pesquisa por Data de estreia~-->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Ordenar
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-controller="Filmes" asp-action="OrdenarMaisRecente"
+                                   data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#filmes"> 
+                                <span class="glyphicon glyphicon-sort-by-attributes-alt"></span> por mais recente </a>
+                            </li>
+                            <li><a asp-controller="Filmes" asp-action="OrdenarMaisAntigo" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#filmes">
+                                <span class="glyphicon glyphicon-sort-by-attributes"></span> por mais antigo </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right" method="post" asp-controller="Filmes" asp-action="ProcurarTitulo"
+                      data-ajax="true" data-ajax-method="post" data-ajax-mode="replace" data-ajax-update="#filmes">>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Pesquisar por título" name="inputNome">
+                        </div>
+                        <button type="submit" class="btn btn-default">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                </form>
+            </div>
+        </nav>
+
+        <!--Zona de Filmes-->
+        <div id="filmes">
+            <partial name="_FilmesPartial" model="@filmes" />
+        </div>
+
+
+    </div>
+</body>
+</html>
+

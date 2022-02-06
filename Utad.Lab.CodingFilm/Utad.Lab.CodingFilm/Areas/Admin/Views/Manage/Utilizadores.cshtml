@@ -1,0 +1,166 @@
+﻿
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Utad.Lab.CodingFilm.Areas.Admin.ViewModels
+@using Utad.Lab.CodingFilm.Models
+@using Microsoft.AspNetCore.Identity;
+
+@model UserViewModel
+@{
+    ViewData["Title"] = "Adicionar Salas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //  Casting
+    var utilizadores = (List<Utilizador>)ViewData["Utilizadores"];
+}
+
+<style>
+    .navbar-brand {
+        font-family: 'Roboto', sans-serif;
+        color: grey;
+        font-size: 30px;
+        margin: 0px;
+    }
+</style>
+
+<h2>Definições Administrador</h2>
+
+<div>
+    <h4>Aqui poderás configurar, adicionar e remover serviços do cinema.</h4>
+    @if (@User.IsInRole("Admin"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-success">Função: Administrador</span></h6>
+        </div>
+    }
+    @if (@User.IsInRole("Funcionário"))
+    {
+        <div class="row-md-5 ">
+            <h6><span class="label label-pill label-warning">Função: Funcionário</span></h6>
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span style="font-weight:bold">O utilizador foi adicionado com sucesso!</span>
+        </div>
+    }
+    <hr />
+
+    <!-- Sidebar Definições da Conta-->
+    <div class="col-md-2">
+        <nav id="sidebar">
+            <!-- Side  Menu -->
+            <ul class="nav nav-pills nav-stacked">
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Funcionário"))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Index">Adicionar Filmes</a>
+                    </li>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Sessão">Adicionar Sessões</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Salas">Adicionar Salas</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Categorias">Adicionar Categorias</a>
+                    </li>
+                    <li class="active">
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Utilizadores">Criar Utilizadores</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Manage" asp-action="Logs">Logs</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+
+    <form id="utilizador-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-5">
+                    <h3>Detalhes do utilizador</h3>
+                    <h5>Aqui poderás definir todos os detalhes acerca do novo utilizador!</h5><br />
+
+                    <div class="form-group">
+                        <label asp-for="Username"></label>
+                        <input asp-for="Username" class="form-control" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" type="email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword"></label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group"><br /><br /><br /><br /><br />
+                        <label asp-for="Nome"></label>
+                        <input asp-for="Nome" type="text" class="form-control" />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Morada"></label>
+                        <input asp-for="Morada" type="text" placeholder="*" class="form-control" />
+                        <span asp-validation-for="Morada" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Nif"></label>
+                        <input asp-for="Nif" type="number" placeholder="*" class="form-control" />
+                        <span asp-validation-for="Nif" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Telefone"></label>
+                        <input asp-for="Telefone" type="number" class="form-control" />
+                        <span asp-validation-for="Telefone" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Cargo"></label>
+                        <select class="form-control" asp-for="Cargo">
+                            <option value="Admin">Admin</option>
+                            <option value="Funcionário">Funcionário</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input class="btn btn-success" type="submit" value="Adicionar utilizador" />
+                    </div>
+                    <div class="form-group">
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            Certifica-te que todos os dados estão correctos antes de adicionares o utilizador!
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    </form>
+</div>
+
+
+

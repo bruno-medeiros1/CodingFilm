@@ -1,0 +1,101 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Fazer login";
+
+}
+
+<body>
+    <h1 style="text-align:center">@ViewData["Title"]</h1>
+
+    <div class="row">
+
+        <div class="col-md-4"></div>
+
+        <div class="col-md-4">
+            <section>
+                <form id="account" method="post">
+                    <h5>Usa uma conta local ou externa para fazer login.</h5>
+                    <hr />
+
+                    <img id="fotoperfil" style="width:350px;height:300px; object-fit:cover; border-radius:30px; " src="/Images/User_Default.png">
+
+                    <div class="form-group">
+                        <label asp-for="Input.UserName"></label>
+                        <input asp-for="Input.UserName" class="form-control" />
+                        <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Password"></label>
+                        <input asp-for="Input.Password" class="form-control" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label asp-for="Input.RememberMe">
+                                <input asp-for="Input.RememberMe" />
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <button type="submit" class="btn btn-primary">Entrar com conta local</button>
+                </form>
+
+                <div class="form-group">
+
+                    <!-- Autenticação com o Google-->
+                    <section>
+                        @{
+                            if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                            {
+                                <div>
+                                    <p>
+                                        Não existem serviços de autenticação configurados. Veja <a href="https://go.microsoft.com/fwlink/?LinkID=532715">este artigo</a>
+                                        para detalhes em como definir esta aplicação de ASP.NET para suportar logins por serviços externos.
+                                    </p>
+                                </div>
+                            }
+                            else
+                            {
+                                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                    <div>
+                                        <p>
+                                            @foreach (var provider in Model.ExternalLogins)
+                                            {
+                                                <button type="submit" style="margin-top:10px" class="btn btn-danger" name="provider" value="@provider.Name" title="Entrar usando uma conta @provider.DisplayName">Entrar com conta @provider.DisplayName</button>
+                                            }
+                                        </p>
+                                    </div>
+                                </form>
+                            }
+                        }
+                    </section>
+
+                    <p>
+                        <a id="forgot-password" asp-page="./ForgotPassword">Esqueceu a sua palavra-passe?</a>
+                    </p>
+                    <p>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Criar uma nova conta</a>
+                    </p>
+                    
+                </div>
+
+                
+            </section>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+}
