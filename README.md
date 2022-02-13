@@ -6,7 +6,7 @@
 
 ## Web App Description
  
-CodingFilm is a web app that supports the management of a cinema's ticket office who was made using *Visual Studio 2019* and developed mainly in the following languages:
+CodingFilm is a web app that supports the management of a cinema's ticket office. This application was made using **Entity Framework** in coordenation with Microsft SQL Management Studio for database creation and management purposes inside *Visual Studio 2019* IDE and it was developed mainly in the following languages:
 * C#
 * Html
 * Bootstrap
