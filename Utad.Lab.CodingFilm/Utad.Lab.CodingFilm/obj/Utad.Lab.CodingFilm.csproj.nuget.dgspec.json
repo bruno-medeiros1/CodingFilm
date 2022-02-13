@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bruno\\OneDrive\\Backup_PC\\Documents\\Universidade\\3ºAno-1ºSemestre\\Laboratório\\CodingFilm GITHUB\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm.csproj": {}
+    "C:\\Users\\bruno\\OneDrive\\Backup_PC\\Documents\\Universidade\\3ºAno-1ºSemestre\\Laboratório\\CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bruno\\OneDrive\\Backup_PC\\Documents\\Universidade\\3ºAno-1ºSemestre\\Laboratório\\CodingFilm GITHUB\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm.csproj": {
+    "C:\\Users\\bruno\\OneDrive\\Backup_PC\\Documents\\Universidade\\3ºAno-1ºSemestre\\Laboratório\\CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bruno\\OneDrive\\Backup_PC\\Documents\\Universidade\\3ºAno-1ºSemestre\\Laboratório\\CodingFilm GITHUB\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm.csproj",
+        "projectUniqueName": "C:\\Users\\bruno\\OneDrive\\Backup_PC\\Documents\\Universidade\\3ºAno-1ºSemestre\\Laboratório\\CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm.csproj",
         "projectName": "Utad.Lab.CodingFilm",
-        "projectPath": "C:\\Users\\bruno\\OneDrive\\Backup_PC\\Documents\\Universidade\\3ºAno-1ºSemestre\\Laboratório\\CodingFilm GITHUB\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm.csproj",
+        "projectPath": "C:\\Users\\bruno\\OneDrive\\Backup_PC\\Documents\\Universidade\\3ºAno-1ºSemestre\\Laboratório\\CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm.csproj",
         "packagesPath": "C:\\Users\\bruno\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\bruno\\OneDrive\\Backup_PC\\Documents\\Universidade\\3ºAno-1ºSemestre\\Laboratório\\CodingFilm GITHUB\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm\\obj\\",
+        "outputPath": "C:\\Users\\bruno\\OneDrive\\Backup_PC\\Documents\\Universidade\\3ºAno-1ºSemestre\\Laboratório\\CodingFilm\\Utad.Lab.CodingFilm\\Utad.Lab.CodingFilm\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
