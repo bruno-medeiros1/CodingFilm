@@ -4,15 +4,26 @@
 
 <h1 align="center">CodingFilm</h1>
 
-This Web app was made in Visual Studio 2019 were the languages used were C#,HTML,BOOTSTRAP,CSS,AJAX among others...
-
 ## Web App Description
  
-CodingFilm is a...
+CodingFilm is a web app that supports the management of a cinema's ticket office who was made using *Visual Studio 2019* and developed mainly in the following languages:
+* C#
+* Html
+* Bootstrap
+* Css
+* Javascript
 
 ## Features
 
- * Feature1
+ * Authentication system provided by ASP.NET Core Identity.
+ * User group based permissions system.
+ * Search system for movies according to certain parameters.
+ * Users can choose a desired time to watch a movie.
+ * Authentication 2FA for login.
+ * Google Authentication API implemented.
+ * Dedicated interface for cinema employees or administrators.
+ * Users can watch the movie trailer of any specific movie they desire to buy tickets.
+ * Logs system.
 
 ## Final Overview
 
